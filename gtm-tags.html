@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html>
+
+//CLIENT 1
+//Product Impression - Product Details Page
+<script type="text/javascript">
+    if ($("div.description:contains('Product Code')").length == 1 && $("div.price[itemprop='offers']").length == 1 && $("h1[itemprop='name']").length == 1){
+        dataLayer.push({
+            "event": "customEvent",
+            "eventInfo": {
+                "label": "Product Impression",
+                "action": "Product Page",
+                "category": "eCommerce Event",
+                "nonInteraction": true
+            },
+            'ecommerce': {
+                'detail': {
+                    "products": [{
+                        'id': $("div.description:contains('Product Code')").text().trim().replace("Product Code: ", ""),
+                        'name': $("h1[itemprop='name']").text().trim(),
+                        'price': $("[itemprop='price']").attr("content").trim()
+                    }]
+                }
+            }
+        });
+    }
+</script>
+
+//Add to Cart - Product Page
+<script type="text/javascript">
+    if ($("div.description:contains('Product Code')").length == 1 && $("div.price[itemprop='offers']").length == 1 && $("h1[itemprop='name']").length == 1){
+        $("#button-cart").on("click", function(){
+            if ($("#qty-input").val() > 0){
+                dataLayer.push({
+                    "event": "customEvent",
+                    "eventInfo": {
+                        "label": "Add to Cart",
+                        "action": "Product Page",
+                        "category": "eCommerce Event",
+                        "nonInteraction": false
+                    },
+                    'ecommerce': {
+                        'currencyCode': 'USD',
+                        'add': {
+                            "products": [{
+                                'id': $("div.description:contains('Product Code')").text().trim().replace("Product Code: ", ""),
+                                'name': $("h1[itemprop='name']").text().trim(),
+                                'quantity': $("#qty-input").attr("value").trim(),
+                                'price': $("[itemprop='price']").attr("content").trim()
+                            }]
+                        }
+                    }
+                });
+            }
+        });
+    }
+</script>
+
+//Checkout Steps
+<script type="text/javascript">
+    jQuery(window).bind("CustomTagEvent", function (e) {
+        if (e.event_label.includes("Checkout Step")){
+            dataLayer.push({
+                "event": "customEvent",
+                "eventInfo": {
+                    "label": e.event_label,
+                    "action": e.event_action,
+                    "category": "eCommerce Event",
+                    "nonInteraction": true
+                },
+                'ecommerce': {
+                    'checkout': {
+                        'actionField': {
+                            'step': e.event_label.charAt(14)
+                        }
+                    }
+                }
+            });
+        };
+    });
+</script>
+
+//Add to Cart - Category Page
+<script type="text/javascript">
+    javascript: (function () {
+        window.com = window.com || {};
+        if (typeof window.com.wheelhouse == 'undefined') {
+            window.com.wheelhouse = {};
+        }
+    })();
+  //created new object as addToCart conflicted with existing addToCart in DOM
+    window.com.wheelhouse.addToCart = function(){
+        $("div.cart [type='button']").click(function(){
+          var $this = $(this);
+          setTimeout(function(){
+              if($("div.modal-body div.added-content:visible:contains('You have added')").length == 1){
+                  dataLayer.push({
+                      "event": "customEvent",
+                      "eventInfo": {
+                          "label": "Add to Cart",
+                          "action": "Category Page",
+                          "category": "eCommerce Event",
+                          "nonInteraction": false
+                      },
+                      'ecommerce': {
+                          'currencyCode': 'USD',
+                          'add': {
+                              "products": [{
+                                  'id': $this.attr("data-sku"),
+                                  'name': $this.parents("div.grid-box").find("div.name").text().trim(),
+                                  'price': $this.parents("div.grid-box").find(".price-tax").text().trim().replace("Ex Tax: $", ""),
+                                 'position': ($this.parents("div.grid-box").index() + 1),
+                                 'quantity': 1
+                              }]
+                          }
+                      }
+                 });
+              }
+          }, 2000);
+          return true;
+        });
+        return true;
+    }
+
+    if ($(".page-header").length == 1){
+        window.com.wheelhouse.addToCart();
+        //call function when switching views between list and grid
+        $('div.btn-group.display input[type="radio"]').on("change", function () {
+            window.com.wheelhouse.addToCart();
+        });
+    }
+</script>
+
+//Product Impression - Category Page - 5 products per tag
+<script type="text/javascript">
+    var productsViewed = [];
+    var splitProductsViewed = [];
+
+    $("div.grid-box").each(function(){
+        //create an empty object
+        var product = {}
+        //create key value pairs in the object
+        product.id = $(this).find("div.cart [type='button']").attr("data-sku");
+        product.name = $(this).find("div.name a").text().trim();
+        product.price = $(this).find(".price-tax").text().trim().replace("Ex Tax: $", "");
+        product.position = ($(this).index() + 1);
+        //push object into an empty array/create json
+        productsViewed.push(product);
+    });
+
+    if ($(".page-header").length == 1 && $("div.grid-box").length > 0){
+        for (var i = 0; i < productsViewed.length; i++){
+            splitProductsViewed.push(productsViewed[i]);
+            //to split the array of products into 5 products per tag/push to the data layer
+            if (splitProductsViewed.length == 5) {
+                dataLayer.push({
+                    "event": "customEvent",
+                    "eventInfo": {
+                        "label": "Product Impression",
+                        "action": "Category Page",
+                        "category": "eCommerce Event",
+                        "nonInteraction": true
+                    },
+                    'ecommerce': {
+                        "impressions": splitProductsViewed
+                    }
+                });
+                //empty the array after sending the 5 products to the data layer
+                splitProductsViewed = [];
+            }
+        }
+        //any leftover products less than 5 will be sent to the data layer
+        if (splitProductsViewed.length > 0) {
+            dataLayer.push({
+                "event": "customEvent",
+                "eventInfo": {
+                    "label": "Product Impression",
+                    "action": "Category Page",
+                    "category": "eCommerce Event",
+                    "nonInteraction": true
+                },
+                'ecommerce': {
+                    'impressions': {
+                        "products": splitProductsViewed
+                    }
+                }
+            });
+            splitProductsViewed = [];
+        }
+    }
+</script>
+
+
+//CLIENT 2
+//Out of Stock Displayed - Impression
+<script type="text/javascript">
+    if ($("div.comparable-product-header").length == 1){
+        dataLayer.push({
+            "event": "customEvent",
+            "eventInfo": {
+                "label": window.location.href,
+                "action": "Impression",
+                "category": "Product Substitution",
+                "value": 0,
+                "nonInteraction": true
+            }
+       });
+    };
+</script>
+
+//Out of Stock Message Displayed - Add to Cart
+<script type="text/javascript">
+    if ($("div.comparable-product-header").length == 1){
+        $("div.comparable-product .product-price-btn:first").click(function(){
+            dataLayer.push({
+                "event": "customEvent",
+                "eventInfo": {
+                    "label": "ADD TO CART",
+                    "action": "Click",
+                    "category": "Product Substitution",
+                    "value": 0,
+                    "nonInteraction": false
+                }
+            });
+        });
+    };
+</script>
+
+//Out of Stock Message Displayed - More Details
+<script type="text/javascript">
+    if ($("div.comparable-product-header").length == 1){
+        $(".btn-secondary:first").click(function(){
+            dataLayer.push({
+                "event": "customEvent",
+                "eventInfo": {
+                    "label": "MORE DETAILS",
+                    "action": "Click",
+                    "category": "Product Substitution",
+                    "value": 0,
+                    "nonInteraction": false
+                }
+            });
+        });
+    };
+</script>
+
+//Out of Stock Message Displayed - Product Image
+<script type="text/javascript">
+    if ($("div.comparable-product-header").length == 1){
+        $("a img.product-image").click(function(){
+            dataLayer.push({
+                "event": "customEvent",
+                "eventInfo": {
+                    "label": "PRODUCT IMAGE",
+                    "action": "Click",
+                    "category": "Product Substitution",
+                    "value": 0,
+                    "nonInteraction": false
+                }
+            });
+        });
+    };
+</script>
+
+//Social Widget - Engagement
+<script type="text/javascript">
+    var socialNetworkLabel = function(socialClick){
+        var labelString = $(socialClick).find("div.j-meta nav a").attr("aria-label") + " | " + $(socialClick).find("div.j-message").text().trim().replace(' ...Read More', '');
+        return labelString.charAt(0).toUpperCase() + labelString.slice(1,200);
+    }
+    if ($("h4:contains('#CLIENTNAME')").length == 1){
+        //set timeout - content was loading after dom ready and attaching event handler
+        setTimeout(function(){
+            $("div.j-text").mousedown(function(){
+                dataLayer.push({
+                    "event": "customEvent",
+                    "eventInfo": {
+                        "label": socialNetworkLabel($(this)),
+                        "action": "Click",
+                        "category": "Social Widget Engagement",
+                        "value": 0,
+                        "nonInteraction": false
+                    }
+               });
+           });
+        }, 2000);
+    };
+</script>
+
+
+//CLIENT 3
+//Request a Demo - Engagement Click
+<script type="text/javascript">
+    (function($){
+        $("a.link-req").mousedown(function(){
+            dataLayer.push({
+                "event": "customEvent",
+                "eventInfo": {
+                    "label": $("a.link-req").text().trim(),
+                    "action": "Request a Demo",
+                    "category": "Engagement",
+                    "value": 0,
+                    "nonInteraction": false
+                }
+            });
+        });
+    })(jQuery);
+</script>
+
+//Request a Demo - Engagement Submit
+<script type="text/javascript">
+    (function($){
+        $("#csub").mousedown(function(){
+            dataLayer.push({
+                "event": "customEvent",
+                "eventInfo": {
+                    "label": $("#csub").val(),
+                    "action": "Request a Demo",
+                    "category": "Engagement",
+                    "value": 0,
+                    "nonInteraction": false
+                }
+            });
+        });
+    })(jQuery);
+</script>
+
+//Let's Connect - Click
+<script type="text/javascript">
+    (function($){
+        $("div.mk-button-container:contains('Connect')").mousedown(function(){
+            dataLayer.push({
+                "event": "customEvent",
+                "eventInfo": {
+                    "label": $("div.mk-button-container:contains('Connect')").text().trim(),
+                    "action": "Let's Connect",
+                    "category": "Engagement",
+                    "value": 0,
+                    "nonInteraction": false
+                }
+            });
+        });
+    })(jQuery);
+</script>
+
+//Let's Connect - Submit
+<script type="text/javascript">
+    (function($){
+        $("input.c-sub1:input[value='Submit']").mousedown(function(){
+            dataLayer.push({
+                "event": "customEvent",
+                "eventInfo": {
+                    "label": $("input.c-sub1:input[value='Submit']").val(),
+                    "action": "Let's Connect",
+                    "category": "Engagement",
+                    "value": 0,
+                    "nonInteraction": false
+                }
+            });
+        });
+    })(jQuery);
+</script>
+
+//Contact Us - Click
+<script type="text/javascript">
+  (function($){
+    $("a:contains('Contact Us')").mousedown(function(){
+      dataLayer.push({
+        "event": "customEvent",
+        "eventInfo": {
+          "label": $("a.menu-item-link:contains('Contact Us')").text().slice(10),
+          "action": "Contact Us",
+          "category": "Engagement",
+          "value": 0,
+          "nonInteraction": false
+        }
+      });
+    });
+  })(jQuery);
+</script>
+
+//Contact Us - Submit
+<script type="text/javascript">
+    (function($){
+        if $("#menu-item-766").mousedown(function(){
+            dataLayer.push({
+                "event": "customEvent",
+                "eventInfo": {
+                    "label": $("input.c-sub1:input[value='Submit']").val(),
+                    "action": "Let's Connect",
+                    "category": "Engagement",
+                    "value": 0,
+                    "nonInteraction": false
+                }
+            });
+        });
+    })(jQuery);
+</script>
+
+//Contact Us - Send
+<script type="text/javascript">
+    (function($){
+        $("input:input[value='Send']").mousedown(function(){
+            dataLayer.push({
+                "event": "customEvent",
+                "eventInfo": {
+                    "label": $("input:input[value='Send']").val(),
+                    "action": "Contact Us",
+                    "category": "Engagement",
+                    "value": 0,
+                    "nonInteraction": false
+                }
+            });
+        });
+    })(jQuery);
+</script>
+
+
+//CLIENT 4
+//Similar Items - Click (on both product & cart pages)
+<script type="text/javascript">
+    if ($("h3:contains('Similar Items')").length == 1){
+        $("h3:contains('Similar Items')").next("div.cross-sell-item-container").find("div.slick-active").mousedown(function(){
+            dataLayer.push({
+                'event': 'customEvent',
+                'eventInfo': {
+                    'category': 'Product Recommendation - Similar Items',
+                    'action': 'Click',
+                    'label': $(this).find("div.cross-sell-item-name").text().trim(),
+                    'value': 0,
+                    'nonInteraction': false
+                }
+            });
+        });
+    }
+</script>
+
+//You May Also Like - Click (on both product & cart pages)
+<script type="text/javascript">
+    if ($("h3:contains('You May Also Like')").length == 1){
+        $("h3:contains('You May Also Like')").next("div.cross-sell-item-container").find("div.slick-active").mousedown(function(){
+            dataLayer.push({
+                'event': 'customEvent',
+                'eventInfo': {
+                    'category': 'Product Recommendation - You May Also Like',
+                    'action': 'Click',
+                    'label': $(this).find("div.cross-sell-item-name").text().trim(),
+                    'value': 0,
+                    'nonInteraction': false
+                }
+            });
+        });
+    }
+</script>
+
+//Combine You May Also Like & Similar Items - Impressions (on both product & cart pages, button clicks and page scroll)
+<script type="text/javascript">
+    var productImpressions = function(){
+        checkProductPositions = function(){
+          if ($("h3:contains('Similar Items')").length == 1 || $("h3:contains('You May Also Like')").length == 1){
+              try {
+                  $("div.cross-sell-item-container .slick-active").each(function (n) {
+                      function isElementInViewport(el){
+                          if (typeof jQuery === "function" && el instanceof jQuery) {
+                              el = el[0];
+                          }
+                          var rect = el.getBoundingClientRect();
+                          return (
+                              rect.top >= 0 &&
+                              rect.left >= 0 &&
+                              rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+                              rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+                          );
+                      }
+                      if (isElementInViewport($(this))) {
+                          if ($(this).data("analytics-wheelhouse-impression") != "viewed") {
+                              dataLayer.push({
+                                  'event': 'customEvent',
+                                  'eventInfo': {
+                                      'category': 'Product Recommendation - ' + $(this).closest("div.cross-sell-item-container").prev("h3").text().trim(),
+                                      'action': 'Impression',
+                                      'label': $(this).find("div.cross-sell-item-info div.cross-sell-item-name").text().trim(),
+                                      'value': 0,
+                                      'nonInteraction': true
+                                  }
+                              });
+                              $(this).data({
+                                  "analytics-wheelhouse-impression": "viewed"
+                              });
+                          }
+                      }
+                  });
+              } catch (e) {;
+              }
+            }
+        };
+        checkProductPositions();
+        $(window).scroll(function(){
+            window.setInterval(function(){
+                if (typeof (this.checkProductTimeoutId) == "number") {
+                    clearTimeout(this.checkProductTimeoutId);
+                }
+                this.checkProductTimeoutId = setTimeout(checkProductPositions, 300);
+            }, 2000);
+        });
+    }
+    productImpressions();
+    $("div.cross-sell-item-container .slick-arrow").on("click", function(){
+        //call function again after clicking arrow button
+        productImpressions();
+    });
+</script>
+
+</html>
