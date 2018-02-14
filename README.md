@@ -29,7 +29,7 @@ _This is a collection of custom script tags I wrote for various clients of a dig
 
 _None._
 
-## Support and contact details
+## Support and Contact Details
 
 _Contributions are always welcome! Please contact Kaili Nishihira at kailinishihira@gmail.com_
 
@@ -37,4 +37,5 @@ _Contributions are always welcome! Please contact Kaili Nishihira at kailinishih
 ### License
 
 Copyright (c) 2018 **_Kaili Nishihira_**
+
 *Licensed under the [MIT License](https://opensource.org/licenses/MIT)*

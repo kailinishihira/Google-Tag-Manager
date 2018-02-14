@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 
-//CLIENT 1
-//Product Impression - Product Details Page
+//CLIENT 1 - BBTB
+//PRODUCT PAGE/ECOMMERCE EVENT - Product Impression
 <script type="text/javascript">
     if ($("div.description:contains('Product Code')").length == 1 && $("div.price[itemprop='offers']").length == 1 && $("h1[itemprop='name']").length == 1){
         dataLayer.push({
@@ -26,7 +26,7 @@
     }
 </script>
 
-//Add to Cart - Product Page
+//PRODUCT PAGE/ECOMMERCE EVENT - Add to Cart
 <script type="text/javascript">
     if ($("div.description:contains('Product Code')").length == 1 && $("div.price[itemprop='offers']").length == 1 && $("h1[itemprop='name']").length == 1){
         $("#button-cart").on("click", function(){
@@ -56,7 +56,7 @@
     }
 </script>
 
-//Checkout Steps
+//ECOMMERECE EVENT - Checkout Steps
 <script type="text/javascript">
     jQuery(window).bind("CustomTagEvent", function (e) {
         if (e.event_label.includes("Checkout Step")){
@@ -80,7 +80,7 @@
     });
 </script>
 
-//Add to Cart - Category Page
+//CATEGORY PAGE/ECOMMERCE EVENT - Add to Cart
 <script type="text/javascript">
     javascript: (function () {
         window.com = window.com || {};
@@ -109,8 +109,8 @@
                                   'id': $this.attr("data-sku"),
                                   'name': $this.parents("div.grid-box").find("div.name").text().trim(),
                                   'price': $this.parents("div.grid-box").find(".price-tax").text().trim().replace("Ex Tax: $", ""),
-                                 'position': ($this.parents("div.grid-box").index() + 1),
-                                 'quantity': 1
+                                  'position': ($this.parents("div.grid-box").index() + 1),
+                                  'quantity': 1
                               }]
                           }
                       }
@@ -131,7 +131,7 @@
     }
 </script>
 
-//Product Impression - Category Page - 5 products per tag
+//CATEGORY PAGE/ECOMMERCE EVENT - Product Impression - 5 products per tag
 <script type="text/javascript">
     var productsViewed = [];
     var splitProductsViewed = [];
@@ -191,8 +191,8 @@
 </script>
 
 
-//CLIENT 2
-//Out of Stock Displayed - Impression
+//CLIENT 2 - GE
+//IMPRESSION/PRODUCT SUBSTITUTION - Out of Stock Displayed - Impression
 <script type="text/javascript">
     if ($("div.comparable-product-header").length == 1){
         dataLayer.push({
@@ -208,7 +208,7 @@
     };
 </script>
 
-//Out of Stock Message Displayed - Add to Cart
+//CLICK/PRODUCT SUBSTITUTION - Out of Stock Message Displayed - Add to Cart
 <script type="text/javascript">
     if ($("div.comparable-product-header").length == 1){
         $("div.comparable-product .product-price-btn:first").click(function(){
@@ -226,7 +226,7 @@
     };
 </script>
 
-//Out of Stock Message Displayed - More Details
+//CLICK/PRODUCT SUBSTITUTION - Out of Stock Message Displayed - More Details
 <script type="text/javascript">
     if ($("div.comparable-product-header").length == 1){
         $(".btn-secondary:first").click(function(){
@@ -244,7 +244,7 @@
     };
 </script>
 
-//Out of Stock Message Displayed - Product Image
+//CLICK/PRODUCT SUBSTITUTION - Out of Stock Message Displayed - Product Image
 <script type="text/javascript">
     if ($("div.comparable-product-header").length == 1){
         $("a img.product-image").click(function(){
@@ -262,7 +262,7 @@
     };
 </script>
 
-//Social Widget - Engagement
+//CLICK/ENGAGEMENT - Social Widget
 <script type="text/javascript">
     var socialNetworkLabel = function(socialClick){
         var labelString = $(socialClick).find("div.j-meta nav a").attr("aria-label") + " | " + $(socialClick).find("div.j-message").text().trim().replace(' ...Read More', '');
@@ -289,14 +289,14 @@
 
 
 //CLIENT 3
-//Request a Demo - Engagement Click
+//REQUEST A DEMO/ENGAGEMENT - Request a Demo - Click
 <script type="text/javascript">
     (function($){
         $("a.link-req").mousedown(function(){
             dataLayer.push({
                 "event": "customEvent",
                 "eventInfo": {
-                    "label": $("a.link-req").text().trim(),
+                    "label": $(this).text().trim(),
                     "action": "Request a Demo",
                     "category": "Engagement",
                     "value": 0,
@@ -307,32 +307,33 @@
     })(jQuery);
 </script>
 
-//Request a Demo - Engagement Submit
+//REQUEST A DEMO/ENGAGEMENT - Request a Demo - Submit
 <script type="text/javascript">
     (function($){
         $("#csub").mousedown(function(){
             dataLayer.push({
                 "event": "customEvent",
                 "eventInfo": {
-                    "label": $("#csub").val(),
+                    "label": $(this).val(),
                     "action": "Request a Demo",
                     "category": "Engagement",
                     "value": 0,
                     "nonInteraction": false
                 }
             });
+            return true;
         });
     })(jQuery);
 </script>
 
-//Let's Connect - Click
+//LET'S CONNECT/ENGAGEMENT - Let's Connect - Click
 <script type="text/javascript">
     (function($){
         $("div.mk-button-container:contains('Connect')").mousedown(function(){
             dataLayer.push({
                 "event": "customEvent",
                 "eventInfo": {
-                    "label": $("div.mk-button-container:contains('Connect')").text().trim(),
+                    "label": $(this).text().trim(),
                     "action": "Let's Connect",
                     "category": "Engagement",
                     "value": 0,
@@ -343,81 +344,65 @@
     })(jQuery);
 </script>
 
-//Let's Connect - Submit
+//LET'S CONNECT/ENGAGEMENT - Let's Connect - Submit
 <script type="text/javascript">
     (function($){
         $("input.c-sub1:input[value='Submit']").mousedown(function(){
             dataLayer.push({
                 "event": "customEvent",
                 "eventInfo": {
-                    "label": $("input.c-sub1:input[value='Submit']").val(),
+                    "label": $(this).val(),
                     "action": "Let's Connect",
                     "category": "Engagement",
                     "value": 0,
                     "nonInteraction": false
                 }
             });
+            return true;
         });
     })(jQuery);
 </script>
 
-//Contact Us - Click
-<script type="text/javascript">
-  (function($){
-    $("a:contains('Contact Us')").mousedown(function(){
-      dataLayer.push({
-        "event": "customEvent",
-        "eventInfo": {
-          "label": $("a.menu-item-link:contains('Contact Us')").text().slice(10),
-          "action": "Contact Us",
-          "category": "Engagement",
-          "value": 0,
-          "nonInteraction": false
-        }
-      });
-    });
-  })(jQuery);
-</script>
-
-//Contact Us - Submit
+//CONTACT US/ENGAGEMENT - Contact Us - Click
 <script type="text/javascript">
     (function($){
-        if $("#menu-item-766").mousedown(function(){
+        $("a:contains('Contact Us')").mousedown(function(){
             dataLayer.push({
                 "event": "customEvent",
                 "eventInfo": {
-                    "label": $("input.c-sub1:input[value='Submit']").val(),
-                    "action": "Let's Connect",
+                    "label": $(this).text().trim(),
+                    "action": "Contact Us",
                     "category": "Engagement",
                     "value": 0,
                     "nonInteraction": false
                 }
-            });
-        });
-    })(jQuery);
+          });
+      });
+  })(jQuery);
 </script>
 
-//Contact Us - Send
+//CONTACT US/ENGAGEMENT - Contact Us - Send
 <script type="text/javascript">
     (function($){
         $("input:input[value='Send']").mousedown(function(){
             dataLayer.push({
                 "event": "customEvent",
                 "eventInfo": {
-                    "label": $("input:input[value='Send']").val(),
+                    "label": $(this).val(),
                     "action": "Contact Us",
                     "category": "Engagement",
                     "value": 0,
                     "nonInteraction": false
                 }
             });
+            return true;
         });
     })(jQuery);
 </script>
 
 
 //CLIENT 4
-//Similar Items - Click (on both product & cart pages)
+//CLICK/PRODUCT RECOMMENDATION - Similar Items (on both product & cart pages)
 <script type="text/javascript">
     if ($("h3:contains('Similar Items')").length == 1){
         $("h3:contains('Similar Items')").next("div.cross-sell-item-container").find("div.slick-active").mousedown(function(){
@@ -435,7 +420,7 @@
     }
 </script>
 
-//You May Also Like - Click (on both product & cart pages)
+//CLICK/PRODUCT RECOMMENDATION - You May Also Like (on both product & cart pages)
 <script type="text/javascript">
     if ($("h3:contains('You May Also Like')").length == 1){
         $("h3:contains('You May Also Like')").next("div.cross-sell-item-container").find("div.slick-active").mousedown(function(){
@@ -453,7 +438,8 @@
     }
 </script>
 
-//Combine You May Also Like & Similar Items - Impressions (on both product & cart pages, button clicks and page scroll)
+
+//IMPRESSION/PRODUCT RECOMMENDATION - Combine You May Also Like & Similar Items (on both product & cart pages, button clicks and page scroll)
 <script type="text/javascript">
     var productImpressions = function(){
         checkProductPositions = function(){
@@ -510,5 +496,6 @@
         productImpressions();
     });
 </script>
+
 
 </html>
