@@ -16,14 +16,14 @@ _This is a collection of custom script tags I wrote for various clients of a dig
 * _Set up a Custom Event Trigger, with an event named customEvent to fire on Custom Event - Label and does not equal Conversion._
 * _Set up a Page View - DOM Ready trigger which fires on all DOM ready events._
 * _Set up a Custom Event Universal Analytics GA tag to track events, add the Custom Event Category, Action, Label and NonInteraction variables and fire the tag with a Custom Event Trigger._
-* _Create Custom HTML tags for your site and use the code as an example, replace the element's with own your site's elements. Most Custom HTML tags I created used the DOM Ready trigger._
+* _Create Custom HTML tags for your site and use the code as an example - replace your site's elements/ids/etc. Most Custom HTML tags I created used the DOM Ready trigger._
 
 ## Technologies Used
 * _jQuery_
 * _[Google Tag Manager](https://tagmanager.google.com)_
 * _[Google Analytics](https://analytics.google.com)_
 * _[Omnibug](https://omnibug.io/) for debugging_
-* _[Observe Point](https://www.observepoint.com) for debuggin_
+* _[Observe Point](https://www.observepoint.com) for debugging_
 
 ## Known Bugs
 
