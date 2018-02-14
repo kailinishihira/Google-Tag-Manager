@@ -5,7 +5,7 @@
 #### By _**Kaili Nishihira**_
 
 ## Description
-_This is a collection of custom script tags I wrote for various clients of a digital marketing agency. The GTM custom HTML tags track specific user data triggered by events. Please comments in the code for specifics._
+_This is a collection of custom script tags I wrote for various clients of a digital marketing agency. The GTM custom HTML tags track specific user data triggered by events. Please see comments in the code for specifics._
 
 ## Setup/Installation Requirements
 * _Create a [Google Analytics](https://analytics.google.com) account._
